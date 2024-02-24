@@ -10,7 +10,7 @@ const DoctorCard = () => {
     email: "",
     username: "",
     password: "",
-    specailitie: ",",
+    specialities: "",
   });
   const onSubmit = async (data) => {
     try {
@@ -109,7 +109,7 @@ const DoctorCard = () => {
         <input
           {...register("specialities")}
           type="text"
-          value={formData.specailities}
+          value={formData.specialities}
           onChange={handleChange}
           className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
           placeholder="Enter your last name"

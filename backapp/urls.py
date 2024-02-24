@@ -1,6 +1,8 @@
 from django.urls import path
-from .views import example_view
+from . import views
 
 urlpatterns = [
-    path('api/example/', example_view, name='example_view'),
+    path('api/user/signup', views.user_signup, name='user_signup'),
+    path('api/checkToken', views.check_token, name='check_token'),
+
 ]

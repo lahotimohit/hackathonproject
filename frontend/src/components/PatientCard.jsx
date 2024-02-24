@@ -6,8 +6,8 @@ const PatientCard = () => {
   const { register, handleSubmit } = useForm();
   const [appError, setAppError] = useState(null);
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    first_name: "",
+    last_name: "",
     email: "",
     username: "",
     password: "",
@@ -45,12 +45,12 @@ const PatientCard = () => {
           First Name
         </label>
         <input
-          {...register("firstName")}
+          {...register("first_name")}
           type="text"
           className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
           placeholder="Enter your first name"
           onChange={handleChange}
-          value={formData.firstName}
+          value={formData.first_name}
         />
       </div>
       <div className="mb-4">
@@ -58,9 +58,9 @@ const PatientCard = () => {
           Last Name
         </label>
         <input
-          {...register("lastName")}
+          {...register("last_name")}
           type="text"
-          value={formData.lastName}
+          value={formData.last_name}
           onChange={handleChange}
           className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
           placeholder="Enter your last name"

@@ -3,14 +3,32 @@ import "./App.css";
 import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
 import Home from "./Pages/Home";
+import About from "./Pages/About";
+import Navbar from "./components/common/Navbar";
+import ContactUs from "./Pages/ContactUs";
+import Dashboard from "./Pages/Dashboard";
+import Error from "./Pages/Error";
+import OTPVerification from "./Pages/OTPVerification";
+import Room from "./Pages/Room";
 
 function App() {
   return (
-    <Routes>
-      <Route index element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
-    </Routes>
+    <div>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<ContactUs />} />
+        <Route path="/otp" element={<OTPVerification />} />
+        {/* Make them in protected routes */}
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/room/:roomId" element={<Room />} />
+        {/* Default Route */}
+        <Route path="*" element={<Error />} />
+      </Routes>
+    </div>
   );
 }
 

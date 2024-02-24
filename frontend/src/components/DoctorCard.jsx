@@ -3,22 +3,28 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 const DoctorCard = () => {
   const { register, handleSubmit } = useForm();
+  const [appError, setAppError] = useState(null);
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    first_name: "",
+    last_name: "",
     email: "",
     username: "",
     password: "",
+    specailitie: ",",
   });
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/user/signup",
+        "http://localhost:8000/api/doctor/signup",
         data
       );
       console.log(response.data.message);
     } catch (error) {
       console.error("Error submitting form:", error.response.data.error);
+      setAppError(
+        Object.values(JSON.parse(Object.values(error.response.data)[0]))[0][0]
+          .message
+      );
     }
   };
 
@@ -28,17 +34,20 @@ const DoctorCard = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      {appError && (
+        <h4 className="bg-red-300 text-red-700 px-2 py-4">{appError}</h4>
+      )}
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700">
           First Name
         </label>
         <input
-          {...register("firstName")}
+          {...register("first_name")}
           type="text"
           className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
           placeholder="Enter your first name"
           onChange={handleChange}
-          value={formData.firstName}
+          value={formData.first_name}
         />
       </div>
       <div className="mb-4">
@@ -46,9 +55,9 @@ const DoctorCard = () => {
           Last Name
         </label>
         <input
-          {...register("lastName")}
+          {...register("last_name")}
           type="text"
-          value={formData.lastName}
+          value={formData.last_name}
           onChange={handleChange}
           className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
           placeholder="Enter your last name"
@@ -91,6 +100,19 @@ const DoctorCard = () => {
           onChange={handleChange}
           className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
           placeholder="Enter your password"
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700">
+          Speicialities
+        </label>
+        <input
+          {...register("specialities")}
+          type="text"
+          value={formData.specailities}
+          onChange={handleChange}
+          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
+          placeholder="Enter your last name"
         />
       </div>
       <button

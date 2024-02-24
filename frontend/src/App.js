@@ -9,6 +9,7 @@ import ContactUs from "./Pages/ContactUs";
 import Dashboard from "./Pages/Dashboard";
 import Error from "./Pages/Error";
 import OTPVerification from "./Pages/OTPVerification";
+import Room from "./Pages/Room";
 
 function App() {
   return (
@@ -23,7 +24,7 @@ function App() {
         <Route path="/otp" element={<OTPVerification />} />
         {/* Make them in protected routes */}
         <Route path="/dashboard" element={<Dashboard />} />
-
+        <Route path="/room/:roomId" element={<Room />} />
         {/* Default Route */}
         <Route path="*" element={<Error />} />
       </Routes>

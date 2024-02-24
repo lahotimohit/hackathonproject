@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
+from . import models
 import secrets
 import random
 from . import forms
@@ -50,7 +51,7 @@ def doctor_signup(request):
             doctor.auth_token = token
             doctor.save()
             print(doctor.auth_token)
-            response_data = {"message": "OTP sent successfully"}
+            response_data = {"message": "OTP sent successfully", 'token':token, 'doctorId':doctor.id}
             return JsonResponse(response_data)
         else:
             errors = form.errors.as_json()
@@ -83,7 +84,13 @@ def check_token(request):
 #     if request.method == 'POST':
 #         data = json.loads(request.body)
 #         print(data)
-        
+#         doctor_token = data.get('token')
+#         doctor_id = data.get('doctorId')
+#         doctor = models.doctor.objects.get(id=doctor_id)
+#         if(doctor.auth_token == doctor_token)
+#         {
+
+#         }
 #         print(request.session.get('otp'))
         
 #         return JsonResponse({ "error": "method not valid" })

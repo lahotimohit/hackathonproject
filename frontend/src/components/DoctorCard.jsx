@@ -19,6 +19,8 @@ const DoctorCard = () => {
         data
       );
       console.log(response.data.message);
+      localStorage.setItem("auth-token", response.data.token);
+      localStorage.setItem("doctor-id", response.data.doctorId);
     } catch (error) {
       console.error("Error submitting form:", error.response.data.error);
       setAppError(

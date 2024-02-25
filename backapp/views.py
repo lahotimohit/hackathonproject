@@ -1,6 +1,5 @@
 from django.http import JsonResponse
 from django.contrib.auth.tokens import default_token_generator
-from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
@@ -92,9 +91,29 @@ def doctor_appointment(request):
         doctorToken = data.get('doctorToken')
         doctor = models.doctor.objects.get(id=doctor_id)
         if doctor.auth_token == doctorToken:
-            return HttpResponse(doctorToken)
+            print(True)
+            appointments = models.Appointment.objects.filter(app_doctor=doctor)
+            appointments_data = [{'app_date': app.app_date, 'app_patient': app.app_patient.username} for app in appointments]
+            return HttpResponse(appointments_data)
         else:
             return HttpResponse('Unauthorized Access...')
+        
+@csrf_exempt
+def user_appointments(request):
+    if request.method=="GET":
+        data = json.loads(request.body)
+        print(data)
+        user_id = data.get('userId')
+        userToken = data.get('userToken')
+        user = User.objects.get(id=user_id)
+        is_valid = default_token_generator.check_token(user, userToken)
+        print(user.username)
+        if is_valid:
+            appointments = models.Appointment.objects.filter(app_patient=user)
+            appointments_data = [{'app_date': app.app_date, 'app_doctor': app.app_doctor.username} for app in appointments]
+            return HttpResponse(appointments_data)
+        else:
+            return HttpResponse("Unauthorized access...")
     
 @csrf_exempt
 def check_token(request):

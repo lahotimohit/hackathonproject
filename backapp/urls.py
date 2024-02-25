@@ -5,6 +5,6 @@ urlpatterns = [
     path('api/user/signup', views.user_signup, name='user_signup'),
     path('api/doctor/signup', views.doctor_signup, name='doctor_signup'),
     path('api/checkToken', views.check_token, name='check_token'),
-    # path('api/checkOtp', views.otp_verify, name='check_otp'),
+    path('api/appointment/create', views.createAppointment, name="appointmentcreate")
     
 ]

@@ -1,6 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
 from taggit.managers import TaggableManager
-
 
 # Create your models here.
 class doctor(models.Model):
@@ -15,5 +15,10 @@ class doctor(models.Model):
     auth_token = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
-        return self.first_name
+        return self.username
+
+class Appointment(models.Model):
+    app_doctor = models.ForeignKey(doctor, on_delete=models.DO_NOTHING)
+    app_patient = models.ForeignKey(User, on_delete=models.DO_NOTHING, default="-------")
+    app_date = models.DateTimeField()    
     

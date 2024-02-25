@@ -1,12 +1,13 @@
 from django.http import JsonResponse
 from django.contrib.auth.tokens import default_token_generator
+from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
-from django.core.mail import send_mail
 from . import models
+from django.http import HttpResponse
+from django.core.mail import send_mail
 import secrets
-import random
 from . import forms
 import json
 
@@ -45,8 +46,6 @@ def doctor_signup(request):
             doctor = form.save()
             password = make_password(doctor.password)
             doctor.password = password
-            # request.session['otp'] = otp_gen(email=doctor.email)
-            # print(request.session.get('otp'))
             token = secrets.token_urlsafe(32)
             doctor.auth_token = token
             doctor.save()
@@ -58,14 +57,45 @@ def doctor_signup(request):
             return JsonResponse({"error": errors}, status=400)
     else:
         return JsonResponse({'msg': "Enter details..."})
+    
+@csrf_exempt
+def createAppointment(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        print(data)
+        userId = data.get('userId')
+        userToken = data.get('userToken')
+        doctorId = data.get('doctorId')
+        dateTime = data.get('dateTime')
+        user = User.objects.get(id=userId)
+        is_valid=default_token_generator.check_token(user, userToken)
+        print(is_valid)
+        if is_valid:
+            room_id = secrets.token_urlsafe(32)
+            doctor = models.doctor.objects.get(id=doctorId)
+            models.Appointment.objects.create(app_doctor=doctor, app_patient=user, app_date=dateTime)
+            url=f"http://localhost:3000/room/{room_id}"
+            html_message=f"Meeting is schedule between {user.username} and {doctor.username}<br> Timing of Meeting: {dateTime}<br>Meeting Link:<h4>{url}</h4><br>Team L'Hopital"
+            send_mail("Meeting Schedule Successfully",'',
+              'Mohit',[doctor.email, user.email], html_message=html_message ,fail_silently=False)
+            return JsonResponse({'message': "Meeting Schedule Successfully..."})
 
-# def otp_gen(email):
-#     print(f"This is the email {email}")
-#     OTP = random.randint(100001, 999999)
-#     send_mail("L Hospital Verification Mail", f"Your one time password to authenticate your L'Hospital Doctor account is {OTP}.\nPlease do not disclose it with anyone....",
-#               'Mohit',[email], fail_silently=False)
-#     return OTP
+        else:
+            return HttpResponse("Authentication error...")
 
+@csrf_exempt
+def doctor_appointment(request):
+    if request.method == "GET":
+        data = json.loads(request.body)
+        print(data)
+        doctor_id = data.get('doctorId')
+        doctorToken = data.get('doctorToken')
+        doctor = models.doctor.objects.get(id=doctor_id)
+        if doctor.auth_token == doctorToken:
+            return HttpResponse(doctorToken)
+        else:
+            return HttpResponse('Unauthorized Access...')
+    
 @csrf_exempt
 def check_token(request):
     if request.method == 'POST':
@@ -82,23 +112,3 @@ def check_token(request):
             return JsonResponse({'error': "Authentication token not verified..."})
     else:
         return JsonResponse({ "error": "method not valid" })
-
-# @csrf_exempt
-# def otp_verify(request): 
-#     if request.method == 'POST':
-#         data = json.loads(request.body)
-#         print(data)
-#         doctor_token = data.get('token')
-#         doctor_id = data.get('doctorId')
-#         doctor = models.doctor.objects.get(id=doctor_id)
-#         if doctor.auth_token == doctor_token:
-#             return JsonResponse({ "message": "otp is verified" })
-        
-#         return JsonResponse({ "error": "method not valid" })
-#     else:
-#         return JsonResponse({ "error": "method not valid" })
-    
-
-    
-
-

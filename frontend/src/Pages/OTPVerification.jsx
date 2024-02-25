@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import OtpInput from "react-otp-input";
+import axios from "axios";
 
 export default function App() {
   const [otp, setOTP] = useState("");
@@ -7,17 +8,21 @@ export default function App() {
 
   const handleChange = (otp) => {
     setOTP(otp);
-    //   if (otp.length === 6) {
-    //     // Add logic to verify OTP here
-    //     if (otp === "123456") {
-    //       alert("OTP Verified Successfully!");
-    //     } else {
-    //       setError("Invalid OTP. Please try again.");
-    //       alert(error);
-    //     }
-    //   } else {
-    //     setError("");
-    //   }
+  };
+
+  const handleOtpSubmit = async () => {
+    if (otp.length != 6) {
+      return;
+    }
+    try {
+      const resp = await axios.post("http://localhost:8000/api/checkOtp", {
+        otp: otp,
+      });
+
+      console.log(resp.data.message);
+    } catch (error) {
+      setError(error.response.data.message);
+    }
   };
 
   return (
@@ -39,6 +44,7 @@ export default function App() {
 
         <button
           type="submit"
+          onClick={handleOtpSubmit}
           className="bg-blue-500 text-white rounded-md py-2 px-4 font-medium hover:bg-blue-600"
         >
           Verify OTP

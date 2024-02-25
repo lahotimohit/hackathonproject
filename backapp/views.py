@@ -45,13 +45,13 @@ def doctor_signup(request):
             doctor = form.save()
             password = make_password(doctor.password)
             doctor.password = password
-            request.session['otp'] = otp_gen(email=doctor.email)
-            print(request.session.get('otp'))
+            # request.session['otp'] = otp_gen(email=doctor.email)
+            # print(request.session.get('otp'))
             token = secrets.token_urlsafe(32)
             doctor.auth_token = token
             doctor.save()
             print(doctor.auth_token)
-            response_data = {"message": "OTP sent successfully", 'token':token, 'doctorId':doctor.id}
+            response_data = {"message": "Doctor Regsitered successfully", 'token':token, 'doctorId':doctor.id}
             return JsonResponse(response_data)
         else:
             errors = form.errors.as_json()
@@ -59,12 +59,12 @@ def doctor_signup(request):
     else:
         return JsonResponse({'msg': "Enter details..."})
 
-def otp_gen(email):
-    print(f"This is the email {email}")
-    OTP = random.randint(100001, 999999)
-    send_mail("L Hospital Verification Mail", f"Your one time password to authenticate your L'Hospital Doctor account is {OTP}.\nPlease do not disclose it with anyone....",
-              'Mohit',[email], fail_silently=False)
-    return OTP
+# def otp_gen(email):
+#     print(f"This is the email {email}")
+#     OTP = random.randint(100001, 999999)
+#     send_mail("L Hospital Verification Mail", f"Your one time password to authenticate your L'Hospital Doctor account is {OTP}.\nPlease do not disclose it with anyone....",
+#               'Mohit',[email], fail_silently=False)
+#     return OTP
 
 @csrf_exempt
 def check_token(request):
@@ -74,8 +74,12 @@ def check_token(request):
         user_token = data.get('token')
         user_id = data.get('userId')
         user = User.objects.get(id=user_id)
+        print(user)
         is_valid = default_token_generator.check_token(user, user_token)
-        return JsonResponse({ "verified": is_valid })
+        if is_valid:
+            return JsonResponse({'user':user})
+        else: 
+            return JsonResponse({'error': "Authentication token not verified..."})
     else:
         return JsonResponse({ "error": "method not valid" })
 
@@ -87,12 +91,14 @@ def check_token(request):
 #         doctor_token = data.get('token')
 #         doctor_id = data.get('doctorId')
 #         doctor = models.doctor.objects.get(id=doctor_id)
-#         if(doctor.auth_token == doctor_token)
-#         {
-
-#         }
-#         print(request.session.get('otp'))
+#         if doctor.auth_token == doctor_token:
+#             return JsonResponse({ "message": "otp is verified" })
         
 #         return JsonResponse({ "error": "method not valid" })
 #     else:
 #         return JsonResponse({ "error": "method not valid" })
+    
+
+    
+
+

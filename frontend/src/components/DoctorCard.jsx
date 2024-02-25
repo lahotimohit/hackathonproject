@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 const DoctorCard = () => {
+  const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
   const [appError, setAppError] = useState(null);
   const [formData, setFormData] = useState({
@@ -21,6 +23,7 @@ const DoctorCard = () => {
       console.log(response.data.message);
       localStorage.setItem("auth-token", response.data.token);
       localStorage.setItem("doctor-id", response.data.doctorId);
+      navigate("/otp");
     } catch (error) {
       console.error("Error submitting form:", error.response.data.error);
       setAppError(

@@ -34,6 +34,19 @@ def user_signup(request):
     else:
         return JsonResponse({'msg': "Enter details..."})
     
+
+# User Login
+@csrf_exempt
+def user_login(request):
+    if request.method == "POST": 
+        data = json.loads(request.body)
+        print(data)
+
+
+# Doctor Login
+    
+
+    
 @csrf_exempt
 def doctor_signup(request):
     if request.method == 'POST':
@@ -123,10 +136,9 @@ def check_token(request):
         user_token = data.get('token')
         user_id = data.get('userId')
         user = User.objects.get(id=user_id)
-        print(user)
         is_valid = default_token_generator.check_token(user, user_token)
         if is_valid:
-            return JsonResponse({'user':user})
+            return JsonResponse({'user': {'first_name': user.first_name, 'last_name': user.last_name, 'username': user.username, 'email': user.email, 'role': 'Patient'}})
         else: 
             return JsonResponse({'error': "Authentication token not verified..."})
     else:

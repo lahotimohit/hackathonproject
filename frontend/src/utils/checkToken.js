@@ -6,9 +6,8 @@ const checkToken = async (token, userId) => {
       token: token,
       userId: userId,
     });
-
-    if (response.data.verified) {
-      return true;
+    if (response.data.user) {
+      return response.data.user;
     } else {
       return false;
     }

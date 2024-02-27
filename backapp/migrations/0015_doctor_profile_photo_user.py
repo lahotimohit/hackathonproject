@@ -9,7 +9,6 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('auth', '0013_alter_user_first_name_alter_user_last_name'),
         ('backapp', '0014_alter_doctor_auth_token'),
     ]
 

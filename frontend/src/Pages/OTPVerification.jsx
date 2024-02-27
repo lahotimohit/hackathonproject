@@ -11,7 +11,7 @@ export default function App() {
   };
 
   const handleOtpSubmit = async () => {
-    if (otp.length != 6) {
+    if (otp.length !== 6) {
       return;
     }
     try {
@@ -24,6 +24,10 @@ export default function App() {
       setError(error.response.data.message);
     }
   };
+
+  if (error) {
+    return <h1>{error.message}</h1>;
+  }
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-100">

@@ -3,6 +3,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 from . import models
 from django.http import HttpResponse
 from django.core.mail import send_mail
@@ -41,8 +42,14 @@ def user_login(request):
     if request.method == "POST": 
         data = json.loads(request.body)
         print(data)
-
-
+        username = data.get('username')
+        user_password = data.get('password')
+        print(username, user_password)
+        user = authenticate(username=username, password=user_password)
+        if user is None:
+            return JsonResponse({ 'authenticated': False })
+        token = default_token_generator.make_token(user)
+        return JsonResponse({'token': token, 'userId': user.id})
 # Doctor Login
     
 
@@ -143,3 +150,35 @@ def check_token(request):
             return JsonResponse({'error': "Authentication token not verified..."})
     else:
         return JsonResponse({ "error": "method not valid" })
+    
+# Check the doctor token here 
+@csrf_exempt 
+def check_doctor_token(request):
+    if data.method == 'POST':
+        data = json.loads(request.body)
+        print(data)
+        user_token = data.get('token')
+        doctor_id = data.get('doctorId')
+        doctor = models.doctor.objects.get(id=doctor_id)
+        print(doctor)
+        if doctor.auth_token == user_token: 
+            return JsonResponse({'user': {'first_name': doctor.first_name, 'last_name': doctor.last_name, 'username': doctor.username, 'email': doctor.email, 'role': 'Doctor'}})
+        else:
+            return JsonResponse({'error': "Authentication token not verified..."})
+        
+    else:
+        return JsonResponse({ "error": "method not valid" })
+    
+
+@csrf_exempt
+def logout_doctor(request):
+    if data.method == 'POST':
+        data = json.loads(request.body)
+        print(data)
+        doctor_id = data.get('userId')
+        user_token = data.get('token')
+        doctor = models.doctor.objects.get(id=doctor_id)
+        print(doctor)
+            
+
+        

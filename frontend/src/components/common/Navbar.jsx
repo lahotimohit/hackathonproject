@@ -2,7 +2,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaHospital } from "react-icons/fa";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import session from "../../atoms/Session";
 
 // import logo from "./logo.png"; // Replace with your logo path
@@ -77,6 +77,11 @@ const Navbar = () => {
               tabIndex={0}
               className="menu dropdown-content z-[1] p-2 shadow rounded-box w-52 mt-4 bg-white"
             >
+              <li>
+                <button className="btn btn-ghost">
+                  {userSession.email}
+                </button>
+              </li>
               <li>
                 <button className="btn btn-ghost">Account Settings</button>
               </li>

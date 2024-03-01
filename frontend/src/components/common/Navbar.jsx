@@ -1,19 +1,29 @@
 // Navbar.js
 import React from "react";
-import { Link, matchPath, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaHospital } from "react-icons/fa";
+import { useRecoilState } from "recoil";
+import session from "../../atoms/Session";
 
 // import logo from "./logo.png"; // Replace with your logo path
 
 const Navbar = () => {
-  const location = useLocation();
+  const [userSession, setUserSession] = useRecoilState(session);
+  console.log(userSession);
   const navigate = useNavigate();
-  const firstName = "Parteek";
-  const lastName = "Sandhu";
 
-  function matchRoute(route) {
-    return matchPath({ path: route }, location.pathname);
-  }
+  const logOutHandler = () => {
+    localStorage.removeItem("auth-token");
+    localStorage.removeItem("user-id");
+    setUserSession({
+      first_name: "",
+      last_name: "",
+      email: "string",
+      username: "",
+      role: "",
+    });
+    navigate("/signup");
+  };
 
   return (
     <div className="w-full bg-blue-500 flex justify-center">
@@ -38,7 +48,7 @@ const Navbar = () => {
         </div>
 
         {/* Right section */}
-        {!matchRoute("/dashboard") ? (
+        {userSession.username === "" ? (
           <div className="flex items-center">
             <Link
               to="/login"
@@ -54,14 +64,33 @@ const Navbar = () => {
             </Link>
           </div>
         ) : (
-          <div className="flex">
+          <div className="dropdown dropdown-end">
             <img
-              src={`https://api.dicebear.com/7.x/initials/svg?seed=${firstName} ${lastName}`}
+              src={`https://api.dicebear.com/7.x/initials/svg?seed=${userSession.first_name} ${userSession.last_name}`}
               alt="avatar"
               width={40}
               height={40}
-              className="rounded-full"
+              tabIndex={0}
+              className="rounded-full btn btn-circle"
             />
+            <ul
+              tabIndex={0}
+              className="menu dropdown-content z-[1] p-2 shadow rounded-box w-52 mt-4 bg-white"
+            >
+              <li>
+                <button className="btn btn-ghost">
+                  {userSession.email}
+                </button>
+              </li>
+              <li>
+                <button className="btn btn-ghost">Account Settings</button>
+              </li>
+              <li>
+                <button onClick={logOutHandler} className="btn btn-ghost">
+                  Log Out
+                </button>
+              </li>
+            </ul>
           </div>
         )}
       </nav>

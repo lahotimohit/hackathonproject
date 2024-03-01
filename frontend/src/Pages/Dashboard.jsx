@@ -1,15 +1,17 @@
 // Dashboard.js
 import React from "react";
-import patient from "../data/patient";
+import { useRecoilValue } from "recoil";
+import session from "../atoms/Session";
 
 const Dashboard = () => {
+  const patient = useRecoilValue(session);
   return (
-    <div className=" flex flex-col justify-center items-center bg-gray-100">
+    <div className="flex flex-col justify-center items-center bg-gray-100">
       <div className="bg-white p-8 rounded shadow-md w-full ">
         <h2 className="text-3xl font-bold mb-4">Dashboard</h2>
         <div className="mb-4">
           <p className="text-lg font-semibold">
-            Welcome back, {patient.firstName}!
+            Welcome back, {patient.first_name}!
           </p>
           <p className="text-gray-600">
             You are logged in as a {patient.role}.

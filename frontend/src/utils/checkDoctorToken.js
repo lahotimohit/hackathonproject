@@ -2,9 +2,9 @@ import axios from "axios";
 
 const checkToken = async (token, userId) => {
   try {
-    const response = await axios.post("http://127.0.0.1:8000/api/checkToken", {
+    const response = await axios.post("http://127.0.0.1:8000/api/doctor/checkToken", {
       token: token,
-      userId: userId,
+      doctorId: userId,
     });
     if (response.data.user) {
       return response.data.user;

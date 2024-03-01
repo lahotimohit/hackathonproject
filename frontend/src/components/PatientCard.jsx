@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { toast } from 'react-hot-toast'
+import { useNavigate } from "react-router-dom";
 
 const PatientCard = () => {
   const { register, handleSubmit } = useForm();
   const [appError, setAppError] = useState(null);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -21,6 +24,8 @@ const PatientCard = () => {
       console.log(response.data.message);
       localStorage.setItem("auth-token", response.data.token);
       localStorage.setItem("user-id", response.data.userId);
+      toast.success("User Created");
+      return navigate("/dashboard");
     } catch (error) {
       console.error("Error submitting form:", error.response.data.error);
       setAppError(

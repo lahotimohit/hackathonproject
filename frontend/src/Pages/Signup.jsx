@@ -19,7 +19,8 @@ const Signup = () => {
       }
       try {
         const signedIn = await checkToken(token, userId);
-        if (signedIn) {
+        console.log(signedIn);
+        if (signedIn !== false) {
           navigate("/dashboard");
         }
         setLoading(false);
